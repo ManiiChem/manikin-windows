@@ -1,0 +1,7 @@
+build/
+*.obj
+*.pdb
+*.ilk
+brain/.venv/
+__pycache__/
+.env

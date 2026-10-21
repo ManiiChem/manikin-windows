@@ -1,0 +1,9 @@
+anthropic>=1.15,<2
+cryptography>=50
+mss>=10
+nvidia-ml-py>=13
+pillow>=13
+psutil>=7
+pyperclip>=1.11
+python-dotenv>=1.2
+uiautomation>=2.0

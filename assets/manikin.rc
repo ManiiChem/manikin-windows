@@ -1,0 +1,4 @@
+// The exe's icon, for Explorer and pinned shortcuts (make.bat links it in). GLFW
+// also picks a resource with this name up as the window's icon until he sets his
+// own at startup (src/icon.c). Redraw manikin.ico from the sprite with: make icon
+GLFW_ICON ICON "manikin.ico"
