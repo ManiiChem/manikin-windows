@@ -243,7 +243,7 @@ class SnapTests(unittest.TestCase):
         combo = Element(Rect(100, 100, 200, 40), "Display resolution", "ComboBox")
         self.assertEqual(choose_box(120, 115, self.WINDOW, [label, combo]).kind, "ComboBox")
 
-    def test_what_the_smoke_test_ran_into(self):
+    def test_real_controls_from_settings_and_vs_code(self):
         # settings resolution dropdown, the value shown inside it is a ListItem
         item = Element(Rect(1900, 873, 272, 28), "2560 x 1600 (Recommended)", "ListItem")
         combo = Element(Rect(1876, 858, 359, 60), "Display resolution", "ComboBox")

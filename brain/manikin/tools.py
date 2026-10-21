@@ -401,7 +401,7 @@ def list_apps(args: dict, roots: list[Path] | None = None) -> str:
         apps = [a for a in apps if query in a[0].lower() or query in Path(a[1]).stem.lower()]
         if not apps:
             return f"No installed app matches {query!r}. Try a shorter or different query."
-    head = (f"{len(apps)} installed app{'s' * (len(apps) != 1)}" +(f" matching {query!r}" if query else "") +
+    head = (f"{len(apps)} installed app{'s' * (len(apps) != 1)}" + (f" matching {query!r}" if query else "") +
             ". Pass the text after '->' exactly as target to open_app_or_file:")
     lines = [head] + [f"{name} -> {target}" for name, target in apps[:MAX_APPS_LISTED]]
     if len(apps) > MAX_APPS_LISTED:

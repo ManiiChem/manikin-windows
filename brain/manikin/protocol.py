@@ -13,7 +13,8 @@ overlay -> brain
                                                    drops queued messages and closes asks
   {"type": "presence", "pet_idle": 42.0, "pc_idle": 3.5, "typing": false, "asleep": false}
       every 5 s. pet_idle = secs since the user last touched Manikin, pc_idle = system wide
-      idle secs or -1 if unknown (counts as present), typing = the chat box has text in it
+      idle secs or -1 if unknown (counts as present), typing = the chat box has text in it,
+      asleep = hes fast asleep (only goes in the log for now)
   {"type": "event", "name": "woke", "slept_s": 720}
       the user poked him awake
   {"type": "point_done", "id": 4, "outcome": "clicked", "x": 1215, "y": 390, "inside": true}

@@ -26,8 +26,8 @@
 #define TYPE_MAX_S 4.0f              // but no text takes longer than this
 #define HAUL_FROM 300.0f             // px, carries longer than this start counting as a haul
 #define HAUL_FULL 1200.0f            // full strength haul from here
-#define LINGER_VICTORY 1.2f          // he celebrates (or looks sheepish) this long before walking home
-#define LINGER_SHEEPISH 0.7f
+#define LINGER_VICTORY WHEEL_VICTORY // he celebrates (or looks sheepish) this long before walking home,
+#define LINGER_SHEEPISH WHEEL_SHEEPISH  // same numbers anim_wheel plays them for
 #define TEXT_MAX BRAIN_TEXT_MAX      // codepoints, never more than the bytes they came in
 
 static PointerLayout lay;

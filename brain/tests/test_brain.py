@@ -74,6 +74,13 @@ class VaultTests(unittest.TestCase):
             self.assertTrue(again.unlock("correct horse"))
             self.assertEqual([n["text"] for n in again.all()], ["likes pixel art"])
 
+    def test_create_that_cant_save_stays_locked(self):
+        with tempfile.TemporaryDirectory() as d:
+            vault = NoteVault(Path(d) / "missing folder" / "notes.enc")
+            with self.assertRaises(OSError):
+                vault.create("correct horse")
+            self.assertFalse(vault.unlocked)
+
 
 class ReminderTests(unittest.TestCase):
     def test_persist_fire_and_missed(self):
@@ -90,6 +97,16 @@ class ReminderTests(unittest.TestCase):
             reopened.fire_due(now=time.time() + 10)
             self.assertEqual([f["text"] for f in fired], ["soon"])
             self.assertEqual([x["text"] for x in Reminders(path, fired.append).all()], ["later"])
+
+    def test_malformed_file_is_skipped(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / "reminders.json"
+            path.write_text(json.dumps({"not": "a list"}), encoding="utf-8")
+            self.assertEqual(Reminders(path, print).all(), [])
+            path.write_text(json.dumps([{"id": 1, "text": "ok", "due": time.time() - 5},
+                                        {"id": "2", "text": "id is a string", "due": 0},
+                                        "junk", {"id": 3, "text": "no due"}]), encoding="utf-8")
+            self.assertEqual([m["text"] for m in Reminders(path, print).take_missed()], ["ok"])
 
     def test_set_reminder_validation(self):
         with tempfile.TemporaryDirectory() as d:

@@ -773,7 +773,7 @@ void wheel_overlay(const Mascot *m, const Face *f)
     if (w->result_left > 0.0f && w->result == DRIVE_RESULT_SHEEPISH)
         u = (SHEEPISH_LEN - w->result_left - 0.15f) / 0.55f;
     if (u >= 0.0f && u < 1.0f) {
-        int side = w->side ? -w->side : 1;               // free hand side (right once the arm is back in)
+        int side = w->side ? -w->side : -1;              // free hand side, same as wheel_face (left once the arm is back in)
         fx_stamp(side > 0 ? 33 : 4, f->hy - 1 + roundi(u * 5.0f), DROP, 3, 4);
     }
 

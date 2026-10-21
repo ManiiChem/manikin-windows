@@ -11,7 +11,6 @@ typedef enum {
     BRAIN_EV_UNLOCKED,      // ok
     BRAIN_EV_READY,
     BRAIN_EV_THINKING,
-    BRAIN_EV_TOOL,          // text = tool name (the brain sends status for this now)
     BRAIN_EV_STATUS,        // text = label for the thinking bubble ("searching the web")
     BRAIN_EV_ASK,           // id, text = the question
     BRAIN_EV_ASK_CANCEL,    // id

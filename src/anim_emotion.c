@@ -860,7 +860,7 @@ int emotion_preview(PreviewFrame *out, int cap)
     int n = 0;
     char buf[32];
     // every emotion talking with its mouth open, then closed, then lingering after
-    for (int e = 0; e < 10; e++) {
+    for (int e = 0; e < (int)(sizeof ALL / sizeof ALL[0]); e++) {
         cat_label(buf, ALL[e].name, " talk");
         n = add(out, n, cap, buf, 1.26f, ALL[e].talk);   // phase 1, mouth open
         cat_label(buf, ALL[e].name, " talk b");

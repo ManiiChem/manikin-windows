@@ -174,7 +174,7 @@ static bool parse_event(const char *text, BrainEvent *ev)
     static const struct { const char *name; BrainEventType type; } TYPES[] = {
         { "password", BRAIN_EV_PASSWORD }, { "unlocked", BRAIN_EV_UNLOCKED },
         { "ready", BRAIN_EV_READY },       { "thinking", BRAIN_EV_THINKING },
-        { "tool", BRAIN_EV_TOOL },         { "ask", BRAIN_EV_ASK },
+        { "ask", BRAIN_EV_ASK },
         { "ask_cancel", BRAIN_EV_ASK_CANCEL }, { "say", BRAIN_EV_SAY },
         { "remind", BRAIN_EV_REMIND },     { "error", BRAIN_EV_ERROR },
         { "status", BRAIN_EV_STATUS },     { "cancelled", BRAIN_EV_CANCELLED },
@@ -203,7 +203,6 @@ static bool parse_event(const char *text, BrainEvent *ev)
         copy_str(ev->mode, sizeof ev->mode, cJSON_GetObjectItemCaseSensitive(msg, "mode"));
         copy_str(ev->mood, sizeof ev->mood, cJSON_GetObjectItemCaseSensitive(msg, "mood"));
         const cJSON *body = cJSON_GetObjectItemCaseSensitive(msg, ev->type == BRAIN_EV_PASSWORD ? "error"
-                                                             : ev->type == BRAIN_EV_TOOL ? "name"
                                                              : ev->type == BRAIN_EV_DRIVE_END ? "result" : "text");
         copy_str(ev->text, sizeof ev->text, body);
         if (ev->type == BRAIN_EV_POINT) {

@@ -224,7 +224,7 @@ static void handle_event(const BrainEvent *ev, bool *chat_open)
         speech_say("My brain stopped working (see data/brain.log). I'll just echo you for now.", EMOTION_NONE, false);
         cues_lead(SFX_BRAIN_DIED);
         break;
-    default:                             // thinking / tool, pending already covers those
+    default:                             // thinking, pending already covers it
         break;
     }
 }

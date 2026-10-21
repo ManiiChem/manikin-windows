@@ -258,24 +258,27 @@ static void typing_arm(int side, int port_y, int hx, int hy, char plug)
 #define AX(v) (side < 0 ? (v) : MASCOT_W - 1 - (v))
     static char mask[MASCOT_H][MASCOT_W];
     memset(mask, '.', sizeof mask);
+    // hx and hy come from anim_wheel so dont trust them to be on the canvas
+#define MSET(y_, x_, c_) do { int my_ = (y_), mx_ = (x_); \
+        if (my_ >= 0 && my_ < MASCOT_H && mx_ >= 0 && mx_ < MASCOT_W) mask[my_][mx_] = (c_); } while (0)
     vline(AX(6), port_y - 1, 3, 'M');      // port socket + coloured plug
     put(AX(5), port_y, plug);
     put(AX(5), port_y + 1, plug);
     for (int yy = port_y; yy <= FOREARM_Y + 1; yy++) {      // down the side...
         bool rib = ((yy - port_y) & 1) != 0;
-        mask[yy][AX(3)] = rib ? 'S' : 'W';
-        mask[yy][AX(4)] = rib ? 'M' : plug;
+        MSET(yy, AX(3), rib ? 'S' : 'W');
+        MSET(yy, AX(4), rib ? 'M' : plug);
     }
     int x0 = AX(3), x1 = side < 0 ? hx + 3 : hx;             // ...and across to the hand
     for (int x = x0; side < 0 ? x <= x1 : x >= x1; x -= side) {
         bool rib = ((x - x0) & 1) != 0;
         if (x == x0 || x == AX(4)) continue;                 // the elbow keeps its ribs
-        mask[FOREARM_Y][x] = rib ? 'S' : 'W';
-        mask[FOREARM_Y + 1][x] = rib ? 'M' : plug;
+        MSET(FOREARM_Y, x, rib ? 'S' : 'W');
+        MSET(FOREARM_Y + 1, x, rib ? 'M' : plug);
     }
     for (int yy = FOREARM_Y + 2; yy < hy; yy++) {            // wrist down to the key its hitting
-        mask[yy][hx + 1] = 'M';
-        mask[yy][hx + 2] = 'M';
+        MSET(yy, hx + 1, 'M');
+        MSET(yy, hx + 2, 'M');
     }
     for (int j = 0; j < 3; j++)
         for (int i = 0; i < 4; i++) {
@@ -301,6 +304,7 @@ static void typing_arm(int side, int port_y, int hx, int hy, char plug)
     for (int y = 0; y < MASCOT_H; y++)
         for (int x = 0; x < MASCOT_W; x++)
             if (mask[y][x] != '.') grid[y][x] = mask[y][x];
+#undef MSET
 #undef AX
 }
 

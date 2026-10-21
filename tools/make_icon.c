@@ -41,6 +41,11 @@ int main(int argc, char **argv)
     FILE *f = fopen(argv[1], "wb");
     if (!f) {
         fprintf(stderr, "can't write %s\n", argv[1]);
+        for (int i = 0; i < ICON_COUNT; i++) {
+            MemFree(png[i]);
+            UnloadImage(img[i]);
+        }
+        CloseWindow();
         return 1;
     }
     put16(f, 0);                            // ICONDIR header, reserved, type 1 = icon, count

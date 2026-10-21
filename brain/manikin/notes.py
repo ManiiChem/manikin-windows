@@ -49,7 +49,11 @@ class NoteVault:
         self._params = dict(KDF_PARAMS)
         self._fernet = Fernet(_derive_key(password, self._salt, self._params))
         self._notes = []
-        self._save()
+        try:
+            self._save()
+        except Exception:
+            self._fernet = None      # couldnt write the file so stay locked instead of pretending
+            raise
 
     def unlock(self, password: str) -> bool:
         doc = json.loads(self.path.read_text(encoding="utf-8"))

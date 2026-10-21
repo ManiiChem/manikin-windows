@@ -82,6 +82,7 @@ static int16_t *render_line(Emotion e, const char *text, int *frames)
     for (int i = 0; text[i]; i++) t += step + pause_after(text, i);
     int n = (int)((t + LINE_TAIL) * SYNTH_RATE) + (int)(syl_n / 0.5f);
     float *mix = calloc((size_t)n, sizeof *mix);
+    if (!mix) { free(syl); *frames = 0; return NULL; }
 
     t = 0;
     for (int i = 0; text[i]; i++) {
@@ -103,10 +104,10 @@ static int16_t *render_line(Emotion e, const char *text, int *frames)
     for (int i = 0; i < n; i++) if (fabsf(mix[i]) > peak) peak = fabsf(mix[i]);
     float gain = peak > 0.97f ? 0.97f / peak : 1.0f;
     int16_t *pcm = malloc((size_t)n * sizeof *pcm);
-    for (int i = 0; i < n; i++) pcm[i] = (int16_t)lrintf(mix[i] * gain * 32767.0f);
+    if (pcm) for (int i = 0; i < n; i++) pcm[i] = (int16_t)lrintf(mix[i] * gain * 32767.0f);
     free(mix);
     free(syl);
-    *frames = n;
+    *frames = pcm ? n : 0;
     return pcm;
 }
 
@@ -266,7 +267,7 @@ static int interactive(void)
         for (int e = 0; e < EMOTION_COUNT; e++) {
             int frames;
             int16_t *pcm = synth_render_voice((Emotion)e, &frames);
-            load(pcm, frames, voices[e], VOICE_ALIASES);
+            if (pcm) load(pcm, frames, voices[e], VOICE_ALIASES);
             free(pcm);
         }
     }

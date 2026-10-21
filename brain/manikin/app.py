@@ -348,7 +348,12 @@ async def _password_phase(pipe: Pipe, inbox: Inbox, vault: NoteVault) -> bool:
                 if again != password:
                     error = "Those didn't match. Let's start over."
                     continue
-                await asyncio.to_thread(vault.create, password)
+                try:
+                    await asyncio.to_thread(vault.create, password)
+                except Exception:
+                    log.exception("couldn't create %s", vault.path)
+                    pipe.send("error", text="I couldn't save my notes file, so memory stays off this time. "
+                                            "See data/brain.log.")
         pipe.send("unlocked", ok=vault.unlocked)
         log.info("memory %s", "unlocked" if vault.unlocked else "skipped")
         return True

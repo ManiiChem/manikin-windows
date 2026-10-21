@@ -51,16 +51,20 @@ long long platform_window_root(long long w) { return w; }
 typedef struct { int id; char outcome[16]; int x, y; bool inside; } Done;
 static Done sent[64];
 static int sent_count;
+static int failures, checks;
 
 void brain_send_point_done(int pid, const char *outcome, int x, int y, bool inside)
 {
+    if (sent_count == (int)(sizeof sent / sizeof sent[0])) {
+        failures++;
+        printf("  FAIL more point_done messages than the test keeps\n");
+        return;
+    }
     Done *d = &sent[sent_count++];
     d->id = pid;
     snprintf(d->outcome, sizeof d->outcome, "%s", outcome);
     d->x = x; d->y = y; d->inside = inside;
 }
-
-static int failures, checks;
 
 #define CHECK(cond, ...) do { checks++; if (!(cond)) { failures++; printf("  FAIL %s:%d: ", __FILE__, __LINE__); \
                                  printf(__VA_ARGS__); printf("\n"); } } while (0)

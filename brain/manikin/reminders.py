@@ -14,6 +14,12 @@ from typing import Callable
 log = logging.getLogger(__name__)
 
 
+def _valid(r) -> bool:
+    due = r.get("due") if isinstance(r, dict) else None
+    return (isinstance(r, dict) and type(r.get("id")) is int and isinstance(r.get("text"), str)
+            and isinstance(due, (int, float)) and not isinstance(due, bool))
+
+
 class Reminders:
     def __init__(self, path: Path, on_fire: Callable[[dict], None]):
         self.path = path
@@ -21,9 +27,14 @@ class Reminders:
         self._items: list[dict] = []
         if path.exists():
             try:
-                self._items = json.loads(path.read_text(encoding="utf-8"))
+                loaded = json.loads(path.read_text(encoding="utf-8"))
             except (OSError, json.JSONDecodeError) as e:
                 log.warning("ignoring unreadable %s: %s", path, e)
+            else:
+                # a hand edited or broken file shouldnt crash him at startup, keep the good ones
+                self._items = [r for r in loaded if _valid(r)] if isinstance(loaded, list) else []
+                if not isinstance(loaded, list) or len(self._items) != len(loaded):
+                    log.warning("skipped malformed reminders in %s", path)
 
     def take_missed(self, now: float | None = None) -> list[dict]:
         """reminders that came due while the app was closed, removes them too"""

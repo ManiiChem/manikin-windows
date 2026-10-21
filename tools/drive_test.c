@@ -64,6 +64,11 @@ static bool esc_flag;                    // what platform_key_pressed() says nex
 
 static Input *rec(InKind k)
 {
+    static bool full;
+    if (nin == INPUT_MAX - 1 && !full) {
+        full = true;
+        printf("  input log is full, the last slot gets overwritten from here (raise INPUT_MAX)\n");
+    }
     Input *i = &ins[nin < INPUT_MAX - 1 ? nin++ : nin];
     memset(i, 0, sizeof *i);
     i->kind = k;
@@ -140,8 +145,8 @@ bool platform_keys(const char *const *names, int n)
         if (!platform_key_known(names[k])) return false;
     Input *i = rec(IN_KEYS);
     for (int k = 0; k < n; k++) {
-        if (k) strcat(i->name, "+");
-        strcat(i->name, names[k]);
+        size_t len = strlen(i->name);
+        snprintf(i->name + len, sizeof i->name - len, "%s%s", k ? "+" : "", names[k]);
         if (strcmp(names[k], "escape") == 0) esc_flag = true;   // the poll sees his own esc too
     }
     return true;
